@@ -1,9 +1,9 @@
 var mysql = require("mysql2");
 var connection = mysql.createConnection({
-    host: '13.234.40.116',
-    database:'Ltick_live_22',
+    host: 'localhost',
+    database:'crudDb',
     user: 'root',
-    password: 'Lentera@20192'
+    password: 'password'
 })
 
 module.exports = connection;
