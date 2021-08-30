@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
     next()
   })
   router.get('/getDetailslist', (req, res, next) => {
-    let sql = "SELECT * FROM Details";
+    let sql = "SELECT * FROM Details where  DeleteStatus = 0";
     // console.log(sql);
     connection.query(sql, function(err, results){
         if(err) throw err;
@@ -30,9 +30,7 @@ router.get('/', (req, res) => {
   });
 
   
-router.post('/getusername', (req,res,next)=>{
-
-  console.log(req.body);
+router.post('/loginauth', (req,res,next)=>{
     let username = req.body.username;
     let sql = "SELECT * FROM loign where username = '"+ username+"';";
     // console.log(sql);
@@ -54,24 +52,28 @@ router.post('/getusername', (req,res,next)=>{
 router.post('/InsertuserDetails', (req,res,next)=>{
 
   console.log(req.body);
-    let Fistname = req.body.FirstName;
-    let LastName = req.body.LastName;
-    let MiddleName = req.body.MiddleName;
-    let PhoneNumber = req.body.PhoneNumber;
-    let Address = req.body.Address;
-    let Email = req.body.Email;
-    let Weight = req.body.Weight;
-    let Height = req.body.Height;
-    let sql = 'INSERT INTO Details(FirstName,LastName,MiddleName,PhoneNumber,Address,Email,Weight,Height) VALUES("'+FirstName+'","'+LastName+'","'+MiddleName+'","'+PhoneNumber+'","'+Address+'","'+Email+'","'+Weight+'","'+Height+'")';
-    console.log(sql);
+    let Fistname = req.body.username.FirstName;
+    let LastName = req.body.username.LastName;
+    let MiddleName = req.body.username.MiddleName;
+    let PhoneNumber = req.body.username.PhoneNumber;
+    let countryCode = req.body.username.countryCode;
+    let Address = req.body.username.Address;
+    let Country = req.body.username.Country[1];
+    let Email = req.body.username.Email;
+    let Weight = req.body.username.Weight;
+    let Height = req.body.username.Height;
+    let state = req.body.username.state;
+    console.log(state);
+    let ZipCode = req.body.username.ZipCode;
+    let sql = 'INSERT INTO Details(FirstName,LastName,MiddleName,PhoneNumber,Address,Email,Weight,Height,Country,State,Zipcode) VALUES("'+Fistname+'","'+LastName+'","'+MiddleName+'","'+countryCode+PhoneNumber+'","'+Address+'","'+Email+'","'+Weight+'","'+Height+'","'+Country+'","'+state+'","'+ZipCode+'");';
     connection.query(sql, (error, results, fields) => {
       if (error) {
         return console.error(error.message);
       }
       if(!results.affectedRows){
-        res.send("No data Found!")
+        res.send(Status = 404,"Failed To Insert Data!")
       }else{
-      res.send(results.affectedRows);
+      res.send(Status = 200,results.affectedRows,"Inserted Sucessfully");
       console.log(results.affectedRows);
           }
     });
@@ -83,17 +85,38 @@ router.post('/Deleteid', (req,res,next)=>{
 
   console.log(req.body);
     let id = req.body.id;
-    let sql = "delete FROM Details where id = '"+ id+"';";
-    // console.log(sql);
+    let sql = "update  Details set DeleteStatus = 1 where id = '"+ id+"';";
+    console.log(sql);
     connection.query(sql, (error, results, fields) => {
       if (error) {
         return console.error(error.message);
       }
       if(!results.affectedRows){
-        res.send("No data Found!")
+        res.send(status=404,"Can not Delete!")
       }else{
-      res.send(results.affectedRows);
+      res.send(status=200,results.affectedRows,"Deleted Sucessfully");
       console.log(results.affectedRows);
+          }
+    });
+   
+    // res.send("hey hell!")
+});
+
+router.post('/GetViewData', (req,res,next)=>{
+
+  console.log(req.body);
+    let id = req.body.id;
+    let sql = "select *  from Details where id = '"+ id+"';";
+    console.log(sql);
+    connection.query(sql, (error, results, fields) => {
+      if (error) {
+        return console.error(error.message);
+      }
+      if(!results){
+        res.send(status=404,"Can not Get!")
+      }else{
+      res.send(results[0],status=200,"View Data Sucessfully");
+      console.log(results);
           }
     });
    
