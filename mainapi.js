@@ -30,10 +30,10 @@ router.get('/', (req, res) => {
   });
 
   
-router.post('/loginauth', (req,res,next)=>{
+router.post('/getusername', (req,res,next)=>{
     let username = req.body.username;
     let sql = "SELECT * FROM loign where username = '"+ username+"';";
-    // console.log(sql);
+    console.log(sql);
     connection.query(sql, (error, results, fields) => {
       if (error) {
         return console.error(error.message);
